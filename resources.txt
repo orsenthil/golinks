@@ -2,3 +2,6 @@ Resources
 =========
 
 * https://pythonhosted.org/Flask-GoogleLogin/
+
+
+* https://www.fullstackpython.com/flask.html
