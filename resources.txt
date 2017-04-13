@@ -10,5 +10,10 @@ Resources
 * requests_oauthlib
 * https://github.com/mitsuhiko/flask-sqlalchemy
 * wtforms
-* https://github.com/GrexIt/flask-login-oauth2
 * https://flask-login.readthedocs.io/en/latest/
+
+
+Not Pip Installable
+-------------------
+
+* https://github.com/GrexIt/flask-login-oauth2
