@@ -1,7 +1,12 @@
 Resources
 =========
 
-* https://pythonhosted.org/Flask-GoogleLogin/
-
-
 * https://www.fullstackpython.com/flask.html
+* https://flask-script.readthedocs.io/en/latest/
+* https://pythonhosted.org/Flask-Bootstrap/
+* https://github.com/miguelgrinberg/flask-moment/
+* https://github.com/lepture/flask-wtf
+* requests
+* requests_oauthlib
+* https://github.com/mitsuhiko/flask-sqlalchemy
+* wtforms
