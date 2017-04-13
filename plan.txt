@@ -1,0 +1,6 @@
+Python3
+-------
+
+* Install all the resources for Python3.
+* Check if google authentication is working.
+* Check if mysql login is working.
