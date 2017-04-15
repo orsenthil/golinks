@@ -156,7 +156,36 @@ def auth(action):
     return redirect(session['next'])
 
 
+@app.route('/new')
+def new():
+    """
+    Admin interface to create a new go-link.
+    
+    GET should display a form to create a new go-link
+    
+    short-form long-form submit
+    :return: 
+    """
+    pass
+
+
+@app.route('/admin')
+def admin():
+    """Admin Interface for golinks.
+    
+    Admin Interface that displays links in the database.
+    Allows to create a new go link.
+    :return: 
+    """
+    pass
+
+
 @app.route('/')
+def index():
+    return '<h1>Hello, World!</h1>'
+
+
+@app.route('/login')
 def index():
     """
     Simple view to display info returned from Google (or a link to login)
