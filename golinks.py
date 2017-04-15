@@ -166,6 +166,15 @@ def auth(action):
     return redirect(session['next'])
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
 @app.route('/new')
 def new():
     """
@@ -192,7 +201,7 @@ def admin():
 
 @app.route('/')
 def hello():
-    return '<h1>Hello, World!</h1>'
+    return render_template("index.html")
 
 
 @app.route('/user/<name>')
