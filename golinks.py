@@ -26,22 +26,22 @@
 """
 
 from __future__ import (
-  absolute_import,
-  unicode_literals,
-)
+        absolute_import,
+        unicode_literals,)
 
 import os
 
 try:
     from flask import (
-      Flask,
-      flash,
-      redirect,
-      render_template_string,
-      request,
-      session,
-      url_for,
-    )
+            Flask,
+            flash,
+            redirect,
+            render_template_string,
+            request,
+            session,
+            url_for,
+            render_template,)
+
     import requests
     from requests_oauthlib import OAuth2Session
 
@@ -49,10 +49,12 @@ except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
 from flask_script import Manager
+from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 
 manager = Manager(app)
+bootstrap = Bootstrap(app)
 
 app.config.update({
   'DEBUG': bool(os.environ.get('DEBUG')),
@@ -195,7 +197,7 @@ def hello():
 
 @app.route('/user/<name>')
 def user(name):
-    return "<h1>Hello, {name}!</h1>".format(name=name)
+    return render_template("new.html", name=name)
 
 
 @app.route('/login')
