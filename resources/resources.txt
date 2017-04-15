@@ -17,9 +17,15 @@ Not Pip Installable
 -------------------
 
 * https://github.com/GrexIt/flask-login-oauth2
+* http://bitwiser.in/2015/09/09/add-google-login-in-flask.html
 
 
 SQLAlchemy Tutorial
 -------------------
 
 Excellent SQL Alchemy Tutorial: http://zetcode.com/db/sqlalchemy/
+
+Reference
+---------
+
+https://github.com/maccman/go
