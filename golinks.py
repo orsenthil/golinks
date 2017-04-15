@@ -29,7 +29,9 @@ from __future__ import (
   absolute_import,
   unicode_literals,
 )
+
 import os
+
 try:
     from flask import (
       Flask,
@@ -42,17 +44,20 @@ try:
     )
     import requests
     from requests_oauthlib import OAuth2Session
+
 except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
 
 app = Flask(__name__)
+
 app.config.update({
   'DEBUG': bool(os.environ.get('DEBUG')),
   'SECRET_KEY': os.environ.get('SECRET_KEY', 'CHANGEME'),
   'GOOGLE_CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
   'GOOGLE_CLIENT_SECRET': os.environ.get('GOOGLE_CLIENT_SECRET'),
 })
+
 
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -183,6 +188,11 @@ def admin():
 @app.route('/')
 def index():
     return '<h1>Hello, World!</h1>'
+
+
+@app.route('/user/<name>')
+def user(name):
+    return "<h1>Hello, {name}!</h1>".format(name=name)
 
 
 @app.route('/login')
