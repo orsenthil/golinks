@@ -48,8 +48,11 @@ try:
 except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
+from flask_script import Manager
 
 app = Flask(__name__)
+
+manager = Manager(app)
 
 app.config.update({
   'DEBUG': bool(os.environ.get('DEBUG')),
@@ -186,7 +189,7 @@ def admin():
 
 
 @app.route('/')
-def index():
+def hello():
     return '<h1>Hello, World!</h1>'
 
 
@@ -309,4 +312,4 @@ def index():
     )
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5000, use_reloader=app.debug, use_debugger=app.debug)
+    manager.run()
