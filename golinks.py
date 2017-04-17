@@ -30,6 +30,9 @@ from __future__ import (
         unicode_literals,)
 
 import os
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required, DataRequired
 
 try:
     from flask import (
@@ -175,7 +178,14 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-@app.route('/new')
+
+class GoLinkForm(FlaskForm):
+    go = StringField("go/", validators=[DataRequired()])
+    url = StringField("redirect to", validators=[DataRequired()])
+    submit = SubmitField("Create")
+
+
+@app.route('/new', methods=["GET", "POST"])
 def new():
     """
     Admin interface to create a new go-link.
@@ -185,7 +195,15 @@ def new():
     short-form long-form submit
     :return: 
     """
-    pass
+    go = None
+    url = None
+    form = GoLinkForm()
+    if form.validate_on_submit():
+        go = form.go.data
+        url = form.url.data
+        form.go.data = ''
+        form.url.data = ''
+    return render_template("new.html", form=form, go=go, url=url)
 
 
 @app.route('/admin')
