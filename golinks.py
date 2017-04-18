@@ -30,6 +30,8 @@ from __future__ import (
         unicode_literals,)
 
 import os
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -226,15 +228,20 @@ def new():
     go = None
     url = None
     form = GoLinkForm()
+    session.pop('_flashes', None)
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
-
-        link = LinksTable(shortlink=go, longlink=url)
-        db.session.add(link)
+        go_link_exists = LinksTable.query.filter_by(shortlink=go).first()
+        if go_link_exists is None:
+            link = LinksTable(shortlink=go, longlink=url, hits=0, created=datetime.utcnow())
+            db.session.add(link)
+        else:
+            flash("http://go/{go} link already exists. Please choose a different name.".format(go=go))
 
         form.go.data = ''
         form.url.data = ''
+
     return render_template("new.html", form=form, go=go, url=url)
 
 
