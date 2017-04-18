@@ -30,9 +30,12 @@ from __future__ import (
         unicode_literals,)
 
 import os
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required, DataRequired
+
+from sqlalchemy.dialects.mysql import BIGINT, INTEGER, VARCHAR, DATETIME
 
 try:
     from flask import (
@@ -54,10 +57,20 @@ except ImportError:
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/golinks"
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 manager = Manager(app)
 bootstrap = Bootstrap(app)
+db = SQLAlchemy(app)
+
 
 app.config.update({
   'DEBUG': bool(os.environ.get('DEBUG')),
@@ -72,6 +85,36 @@ if app.debug:
 
 if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
     raise RuntimeError('Environment not set up, see "Running":\n' + __doc__)
+
+"""
+CREATE TABLE IF NOT EXISTS `golinks`.`LinksTable` (
+  `id` INT NOT NULL,
+  `username` VARCHAR(45) NULL,
+  `userid` BIGINT NULL,
+  `shortlink` VARCHAR(45) NULL,
+  `longlink` VARCHAR(45) NULL,
+  `hits` BIGINT DEFAULT 0,
+  `created` DATETIME DEFAULT  CURRENT_TIMESTAMP,
+  `updated` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `shortlink_UNIQUE` (`shortlink` ASC))
+ENGINE = InnoDB
+"""
+
+
+class LinksTable(db.Model):
+    __tablename__ = 'LinksTable'
+    id = db.Column(INTEGER, primary_key=True)
+    username = db.Column(VARCHAR(45))
+    userid = db.Column(BIGINT)
+    shortlink = db.Column(VARCHAR(45), unique=True)
+    longlink = db.Column(VARCHAR(45))
+    hits = db.Column(BIGINT)
+    created = db.Column(DATETIME)
+    updated = db.Column(DATETIME)
+
+    def __repr__(self):
+        return '<LinksTable http://go/%r (%r) >' % (self.shortlink, self.longlink)
 
 
 @app.route('/auth', defaults={'action': 'login'})
