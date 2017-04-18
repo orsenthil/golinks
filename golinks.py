@@ -86,21 +86,6 @@ if app.debug:
 if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
     raise RuntimeError('Environment not set up, see "Running":\n' + __doc__)
 
-"""
-CREATE TABLE IF NOT EXISTS `golinks`.`LinksTable` (
-  `id` INT NOT NULL,
-  `username` VARCHAR(45) NULL,
-  `userid` BIGINT NULL,
-  `shortlink` VARCHAR(45) NULL,
-  `longlink` VARCHAR(45) NULL,
-  `hits` BIGINT DEFAULT 0,
-  `created` DATETIME DEFAULT  CURRENT_TIMESTAMP,
-  `updated` DATETIME ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `shortlink_UNIQUE` (`shortlink` ASC))
-ENGINE = InnoDB
-"""
-
 
 class LinksTable(db.Model):
     __tablename__ = 'LinksTable'
@@ -244,6 +229,10 @@ def new():
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
+
+        link = LinksTable(shortlink=go, longlink=url)
+        db.session.add(link)
+
         form.go.data = ''
         form.url.data = ''
     return render_template("new.html", form=form, go=go, url=url)
