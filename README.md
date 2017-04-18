@@ -11,7 +11,7 @@ id short long. user count
 TODO
 ----
 
-- [ ] /new to db.
+- [x] /new to db.
 - [ ] /all
 - [ ] /edit
 - [ ] /go/link redirect.
