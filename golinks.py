@@ -245,6 +245,12 @@ def new():
     return render_template("new.html", form=form, go=go, url=url)
 
 
+@app.route('/all', methods=["GET"])
+def all():
+    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.shortlink, LinksTable.longlink).all()
+    return render_template("all.html", link_details=link_details)
+
+
 @app.route('/admin')
 def admin():
     """Admin Interface for golinks.

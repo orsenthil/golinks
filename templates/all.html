@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{%  block page_content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    <p class="page-header text-left text-capitalize">
+                        /go/all
+                    </p>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-inverse">
+        <tr>
+            <th>#</th>
+            <th>/go</th>
+            <th>url</th>
+        </tr>
+        </thead>
+
+        {% for information in link_details %}
+        <tbody>
+        <tr>
+            <th scope="row">{{ information[0] }}</th>
+            <td>{{ information[1] }}</td>
+            <td>{{ information[2] }}</td>
+        </tr>
+        </tbody>
+
+        {% endfor %}
+
+    </table>
+
+{% endblock %}
