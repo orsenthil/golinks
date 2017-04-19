@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>
-                    <p class="page-header text-left text-capitalize">
+                    <p class="page-header text-left">
                         /go/all
                     </p>
                 </h3>
@@ -21,6 +21,7 @@
             <th>#</th>
             <th>/go</th>
             <th>url</th>
+            <th>edit</th>
         </tr>
         </thead>
 
@@ -30,6 +31,7 @@
             <th scope="row">{{ information[0] }}</th>
             <td>{{ information[1] }}</td>
             <td>{{ information[2] }}</td>
+            <td><a href="/edit/{{information [0]}}">modify</a></td>
         </tr>
         </tbody>
 

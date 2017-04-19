@@ -12,8 +12,11 @@ TODO
 ----
 
 - [x] /new to db.
-- [ ] /all
-- [ ] /edit
+- [x] /all
+- [x] /edit
 - [ ] /go/link redirect.
+- [ ] Integrate with authentication.
+- [ ] clean up1
+- [ ] study and clean up
 - [ ] local testing.
 - [ ] testing using router changes.

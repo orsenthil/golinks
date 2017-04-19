@@ -215,6 +215,12 @@ class GoLinkForm(FlaskForm):
     submit = SubmitField("Create")
 
 
+class GoLinkEditForm(FlaskForm):
+    go = StringField("go/", validators=[DataRequired()])
+    url = StringField("new url", validators=[DataRequired()])
+    submit = SubmitField("Update")
+
+
 @app.route('/new', methods=["GET", "POST"])
 def new():
     """
@@ -249,6 +255,23 @@ def new():
 def all():
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.shortlink, LinksTable.longlink).all()
     return render_template("all.html", link_details=link_details)
+
+
+@app.route('/edit/<id>', methods=["GET", "POST"])
+def edit(id):
+    form = GoLinkEditForm()
+    if form.validate_on_submit():
+
+        golink = LinksTable.query.get(id)
+        url = form.url.data
+        golink.longlink = url
+        db.session.commit()
+
+        form.go.data = ""
+        form.url.data = ""
+        return redirect("/all")
+
+    return render_template("edit.html", form=form)
 
 
 @app.route('/admin')
