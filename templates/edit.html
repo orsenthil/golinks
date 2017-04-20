@@ -12,7 +12,8 @@
     <div class="form-group">
         <label class="col-md-5 control-label"></label>
         <div class="col-md-5 center-block ">
-            {{ wtf.form_field(form.save, button_map = {"submit": "success"}) }}
+            {{ wtf.form_field(form.update, button_map = {"update": "success"}) }}
+            {{ wtf.form_field(form.cancel, button_map = {"cancel": "danger"}) }}
         </div>
     </div>
 

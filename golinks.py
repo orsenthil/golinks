@@ -218,7 +218,8 @@ class GoLinkForm(FlaskForm):
 class GoLinkEditForm(FlaskForm):
     go = StringField("go/", validators=[DataRequired()])
     url = StringField("new url", validators=[DataRequired()])
-    submit = SubmitField("Update")
+    update = SubmitField("Update")
+    cancel = SubmitField("Cancel")
 
 
 @app.route('/new', methods=["GET", "POST"])
