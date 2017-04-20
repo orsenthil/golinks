@@ -14,7 +14,7 @@ TODO
 - [x] /new to db.
 - [x] /all
 - [x] /edit
-- [ ] /go/link redirect.
+- [x] /go/link redirect.
 - [ ] Integrate with authentication.
 - [ ] clean up1
 - [ ] study and clean up

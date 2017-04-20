@@ -274,16 +274,6 @@ def edit(id):
     return render_template("edit.html", form=form)
 
 
-@app.route('/admin')
-def admin():
-    """Admin Interface for golinks.
-    
-    Admin Interface that displays links in the database.
-    Allows to create a new go link.
-    :return: 
-    """
-    pass
-
 @app.route('/<go>')
 def go(go):
     go_link = LinksTable.query.filter_by(shortlink=go).first()
