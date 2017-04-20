@@ -277,7 +277,10 @@ def edit(id):
 @app.route('/<go>')
 def go(go):
     go_link = LinksTable.query.filter_by(shortlink=go).first()
-    return redirect(go_link.longlink, code=301)
+    if go_link is None:
+        return redirect("/all")
+
+    return redirect(go_link.longlink, code=302)
 
 
 @app.route('/')
