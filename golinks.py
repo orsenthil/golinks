@@ -260,9 +260,8 @@ def all():
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
     form = GoLinkEditForm()
+    golink = LinksTable.query.get(id)
     if form.validate_on_submit():
-
-        golink = LinksTable.query.get(id)
         url = form.url.data
         golink.longlink = url
         db.session.commit()
@@ -271,7 +270,7 @@ def edit(id):
         form.url.data = ""
         return redirect("/all")
 
-    return render_template("edit.html", form=form)
+    return render_template("edit.html", form=form, go=golink.shortlink)
 
 
 @app.route('/<go>')

@@ -3,6 +3,19 @@
 
 {% block page_content %}
 
-{{ wtf.quick_form(form, form_type="horizontal", horizontal_columns=('md', 4, 4), button_map = {"submit": "success"}) }}
+<form class="form form-horizontal" method="post" role="form">
+    {{ form.hidden_tag() }}
+    {{ wtf.form_errors(form, hiddens="only") }}
+    {{ wtf.form_field(form.go, form_type="horizontal", horizontal_columns=('md', 4, 4), default="{{go}}") }}
+    {{ wtf.form_field(form.url, form_type="horizontal", horizontal_columns=('md', 4, 4)) }}
+
+    <div class="form-group">
+        <label class="col-md-5 control-label"></label>
+        <div class="col-md-5 center-block ">
+            {{ wtf.form_field(form.save, button_map = {"submit": "success"}) }}
+        </div>
+    </div>
+
+</form>
 
 {% endblock %}
