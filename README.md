@@ -15,12 +15,13 @@ TODO
 - [x] /all
 - [x] /edit
 - [x] /go/link redirect.
-- [ ] Integrate with authentication.
-- [ ] Absolutely no caching.
+- [x] Absolutely no caching.
 - [ ] clean up1
-- [ ] study and clean up
 - [ ] local testing.
 - [ ] testing using router changes.
+- [ ] forms pre-filled.
+- [ ] change auth link only for new and edit.
+- [ ] / page
 
 Design
 ------
