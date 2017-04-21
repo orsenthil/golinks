@@ -261,7 +261,7 @@ def edit(id):
     golink = LinksTable.query.get(id)
     if form.validate_on_submit():
         url = form.url.data
-        golink.longlink = url
+        golink.url = url
         db.session.commit()
 
         form.go.data = ""
@@ -277,7 +277,13 @@ def go(go):
     if go_link is None:
         return redirect("/all")
 
-    return redirect(go_link.url, code=302)
+    redirect_response = redirect(go_link.url, code=302)
+
+    redirect_response.headers.add('Last-Modified', datetime.now())
+    redirect_response.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+    redirect_response.headers.add('Pragma', 'no-cache')
+
+    return redirect_response
 
 
 @app.route('/')
