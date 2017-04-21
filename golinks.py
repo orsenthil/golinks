@@ -25,9 +25,7 @@
         max-line-length = 99
 """
 
-from __future__ import (
-        absolute_import,
-        unicode_literals,)
+from __future__ import absolute_import, unicode_literals
 
 import os
 from datetime import datetime
@@ -240,7 +238,7 @@ def new():
         url = form.url.data
         go_link_exists = LinksTable.query.filter_by(name=go).first()
         if go_link_exists is None:
-            link = LinksTable(name=go, url=url, hits=0, created=datetime.utcnow())
+            link = LinksTable(name=go, url=url, hits=0, created_at=datetime.utcnow())
             db.session.add(link)
         else:
             flash("http://go/{go} link already exists. Please choose a different name.".format(go=go))
@@ -270,7 +268,7 @@ def edit(id):
         form.url.data = ""
         return redirect("/all")
 
-    return render_template("edit.html", form=form, go=golink.shortlink)
+    return render_template("edit.html", form=form, go=golink.name)
 
 
 @app.route('/<go>')
@@ -279,7 +277,7 @@ def go(go):
     if go_link is None:
         return redirect("/all")
 
-    return redirect(go_link.longlink, code=302)
+    return redirect(go_link.url, code=302)
 
 
 @app.route('/')
