@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `golinks`.`LinksTable` (
-  `id` INT NOT NULL AUTO_INCREMENT DEFAULT 0,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NULL,
   `userid` BIGINT NULL,
   `name` VARCHAR(45) NULL,
