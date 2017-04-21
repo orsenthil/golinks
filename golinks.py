@@ -92,16 +92,15 @@ if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
 class LinksTable(db.Model):
     __tablename__ = 'LinksTable'
     id = db.Column(INTEGER, primary_key=True)
+    name = db.Column(VARCHAR(45), unique=True)
+    url = db.Column(VARCHAR(45))
+    hits = db.Column(BIGINT)
     username = db.Column(VARCHAR(45))
     userid = db.Column(BIGINT)
-    shortlink = db.Column(VARCHAR(45), unique=True)
-    longlink = db.Column(VARCHAR(45))
-    hits = db.Column(BIGINT)
-    created = db.Column(DATETIME)
-    updated = db.Column(DATETIME)
+    created_at = db.Column(DATETIME)
 
     def __repr__(self):
-        return '<LinksTable http://go/%r (%r) >' % (self.shortlink, self.longlink)
+        return '<LinksTable http://go/%r (%r) >' % (self.name, self.url)
 
 
 @app.route('/auth', defaults={'action': 'login'})
@@ -239,9 +238,9 @@ def new():
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
-        go_link_exists = LinksTable.query.filter_by(shortlink=go).first()
+        go_link_exists = LinksTable.query.filter_by(name=go).first()
         if go_link_exists is None:
-            link = LinksTable(shortlink=go, longlink=url, hits=0, created=datetime.utcnow())
+            link = LinksTable(name=go, url=url, hits=0, created=datetime.utcnow())
             db.session.add(link)
         else:
             flash("http://go/{go} link already exists. Please choose a different name.".format(go=go))
@@ -254,7 +253,7 @@ def new():
 
 @app.route('/all', methods=["GET"])
 def all():
-    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.shortlink, LinksTable.longlink).all()
+    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
     return render_template("all.html", link_details=link_details)
 
 
@@ -276,7 +275,7 @@ def edit(id):
 
 @app.route('/<go>')
 def go(go):
-    go_link = LinksTable.query.filter_by(shortlink=go).first()
+    go_link = LinksTable.query.filter_by(name=go).first()
     if go_link is None:
         return redirect("/all")
 

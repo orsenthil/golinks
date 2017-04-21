@@ -2,11 +2,10 @@ CREATE TABLE IF NOT EXISTS `golinks`.`LinksTable` (
   `id` INT NOT NULL AUTO_INCREMENT DEFAULT 0,
   `username` VARCHAR(45) NULL,
   `userid` BIGINT NULL,
-  `shortlink` VARCHAR(45) NULL,
-  `longlink` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL,
+  `url` VARCHAR(45) NULL,
   `hits` BIGINT DEFAULT 0,
-  `created` DATETIME DEFAULT  CURRENT_TIMESTAMP,
-  `updated` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` DATETIME DEFAULT  CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `shortlink_UNIQUE` (`shortlink` ASC))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB
