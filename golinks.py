@@ -6,13 +6,16 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
+
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, VARCHAR, DATETIME
 from flask import Flask, flash, redirect, request, session, url_for, render_template
+
 import requests
 from requests_oauthlib import OAuth2Session
+
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
 
@@ -63,15 +66,13 @@ class LinksTable(db.Model):
 @app.route('/auth', defaults={'action': 'login'})
 @app.route('/auth/<action>')
 def auth(action):
-    """ All-purpose authentication view.
-        Stores `next` GET param in session (to persist around OAuth redirects)
-        Stores referrer in session (to redirect back to on error)
-        Refreshes token for logged in user if action == 'refresh'
-        Revokes the token for logged in user if action == 'revoke'
-        Logs out already logged-in users if action == 'logout'
-        Handles initial redirect off to Google to being OAuth 2.0 flow
-        Handles redirect back from Google & retreiving OAuth token
-        Stores user info & OAuth token in `session['user']`
+    """All-purpose authentication view.
+    
+    Stores `next` GET param in session (to persist around OAuth redirects) stores referrer in session 
+    (to redirect back to on error) Refreshes token for logged in user if action == 'refresh'.
+    Revokes the token for logged in user if action == 'revoke'. Logs out already logged-in users if action == 'logout'.
+    Handles initial redirect off to Google to being OAuth 2.0 flow handles redirect back from Google & retreiving 
+    OAuth token Stores user info & OAuth token in `session['user']`
     """
 
     # Store some useful destinations in session
@@ -87,50 +88,42 @@ def auth(action):
         if 'refresh_token' not in session['user']['token']:
             flash('Could not refresh, token not present', 'danger')
             return redirect(session['last'])
-        google = OAuth2Session(
-          app.config['GOOGLE_CLIENT_ID'],
-          token=session['user']['token']
-        )
+
+        google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['user']['token'])
         session['user']['token'] = google.refresh_token(
-          'https://accounts.google.com/o/oauth2/token',
-          client_id=app.config['GOOGLE_CLIENT_ID'],
-          client_secret=app.config['GOOGLE_CLIENT_SECRET']
-        )
+                'https://accounts.google.com/o/oauth2/token',
+                client_id=app.config['GOOGLE_CLIENT_ID'],
+                client_secret=app.config['GOOGLE_CLIENT_SECRET'])
+
         flash('Token refreshed', 'success')
         return redirect(session['next'])
 
-    # User loggedin - logout &/or revoke
     if session.get('user'):
         if action == 'revoke':
-            response = requests.get(
-              'https://accounts.google.com/o/oauth2/revoke',
-              params={'token': session['user']['token']['access_token']}
-            )
+            response = requests.get('https://accounts.google.com/o/oauth2/revoke',
+                                    params={'token': session['user']['token']['access_token']})
+
             if response.status_code == 200:
                 flash('Authorization revoked', 'warning')
             else:
                 flash('Could not revoke token: {}'.format(response.content), 'danger')
+
         if action in ['logout', 'revoke']:
             del session['user']
             flash('Logged out', 'success')
+
         return redirect(session['last'])
 
     google = OAuth2Session(
-      app.config['GOOGLE_CLIENT_ID'],
-      scope=[
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile',
-      ],
-      redirect_uri=url_for('auth', _external=True),
-      state=session.get('state')
-    )
+            app.config['GOOGLE_CLIENT_ID'],
+            scope=['https://www.googleapis.com/auth/userinfo.email',
+                   'https://www.googleapis.com/auth/userinfo.profile'],
+            redirect_uri=url_for('auth', _external=True),
+            state=session.get('state'))
 
     # Initial client request, no `state` from OAuth redirect
     if not request.args.get('state'):
-        url, state = google.authorization_url(
-          'https://accounts.google.com/o/oauth2/auth',
-          access_type='offline'
-        )
+        url, state = google.authorization_url('https://accounts.google.com/o/oauth2/auth', access_type='offline')
         session['state'] = state
         return redirect(url)
 
@@ -144,11 +137,12 @@ def auth(action):
 
     # Redirect from google with OAuth2 state
     token = google.fetch_token(
-      'https://accounts.google.com/o/oauth2/token',
-      client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-      authorization_response=request.url
-    )
+            'https://accounts.google.com/o/oauth2/token',
+            client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+            authorization_response=request.url)
+
     user = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
+
     user['token'] = token
     session['user'] = user
     flash('Logged in', 'success')
@@ -187,10 +181,12 @@ def new():
     url = None
     form = GoLinkForm()
     session.pop('_flashes', None)
+
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
         go_link_exists = LinksTable.query.filter_by(name=go).first()
+
         if go_link_exists is None:
             link = LinksTable(name=go, url=url, hits=0, created_at=datetime.utcnow())
             db.session.add(link)
