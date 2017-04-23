@@ -199,10 +199,10 @@ def new():
     return render_template("new.html", form=form, go=go, url=url)
 
 
-@app.route('/all', methods=["GET"])
-def all():
+@app.route('/', methods=["GET"])
+def index():
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
-    return render_template("all.html", link_details=link_details)
+    return render_template("index.html", link_details=link_details)
 
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
@@ -216,7 +216,7 @@ def edit(id):
 
         form.go.data = ""
         form.url.data = ""
-        return redirect("/all")
+        return redirect("/")
 
     return render_template("edit.html", form=form, go=golink.name)
 
@@ -225,7 +225,7 @@ def edit(id):
 def go(go):
     go_link = LinksTable.query.filter_by(name=go).first()
     if go_link is None:
-        return redirect("/all")
+        return redirect("/")
 
     redirect_response = redirect(go_link.url, code=302)
 
@@ -234,16 +234,6 @@ def go(go):
     redirect_response.headers.add('Pragma', 'no-cache')
 
     return redirect_response
-
-
-@app.route('/')
-def hello():
-    return render_template("index.html")
-
-
-@app.route('/user/<name>')
-def user(name):
-    return render_template("new.html", name=name)
 
 
 @app.route('/login')
