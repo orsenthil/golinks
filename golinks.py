@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, unicode_literals
-
 import os
 from datetime import datetime
 
@@ -12,24 +10,9 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, VARCHAR, DATETIME
-
-try:
-    from flask import (
-            Flask,
-            flash,
-            redirect,
-            render_template_string,
-            request,
-            session,
-            url_for,
-            render_template,)
-
-    import requests
-    from requests_oauthlib import OAuth2Session
-
-except ImportError:
-    raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
-
+from flask import Flask, flash, redirect, request, session, url_for, render_template
+import requests
+from requests_oauthlib import OAuth2Session
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
 
@@ -60,7 +43,7 @@ if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
-    raise RuntimeError('Environment not set up, see "Running":\n' + __doc__)
+    raise RuntimeError('Environment not set up.')
 
 
 class LinksTable(db.Model):
@@ -199,11 +182,6 @@ class GoLinkEditForm(FlaskForm):
 def new():
     """
     Admin interface to create a new go-link.
-    
-    GET should display a form to create a new go-link
-    
-    short-form long-form submit
-    :return: 
     """
     go = None
     url = None
@@ -274,9 +252,7 @@ def user(name):
 
 @app.route('/login')
 def index():
-    """
-    Simple view to display info returned from Google (or a link to login)
-    """
+    """Simple view to display info returned from Google (or a link to login)."""
     return render_template("login.html",user=session.get('user'))
 
 if __name__ == '__main__':
