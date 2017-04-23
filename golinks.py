@@ -1,30 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-    A simple flask app to authenticate with Google's OAuth 2.0 API
-
-    Requirements:
-        Flask>=0.10.0
-        requests-oauthlib>=0.5.0
-        To install, run: "pip install Flask>=0.10.0 requests-oauthlib>=0.5.0"
-
-    Running:
-        export GOOGLE_CLIENT_ID="123456789-jhkgljk2g34lkjg24.apps.googleusercontent.com"
-        export GOOGLE_CLIENT_SECRET="SDfKsdflkSJDFSFDHhjsdfIUWER"
-        export SECRET_KEY="SECRET_KEY_OF_YOUR_CHOOSING"
-        ./google_login.py
-
-        NB: OAuth 2 requires HTTPS. This app will override that if DEBUG is set in
-            the environment.
-
-    Misc:
-        tox.ini:
-        [flake8]
-        ignore = F999,E128,E124,F403,E121,W503
-        max-line-length = 99
-"""
-
 from __future__ import absolute_import, unicode_literals
 
 import os
@@ -33,7 +9,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import Required, DataRequired
+from wtforms.validators import DataRequired
 
 from sqlalchemy.dialects.mysql import BIGINT, INTEGER, VARCHAR, DATETIME
 
