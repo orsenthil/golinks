@@ -68,11 +68,11 @@ class LinksTable(db.Model):
 def auth(action):
     """All-purpose authentication view.
     
-    Stores `next` GET param in session (to persist around OAuth redirects) stores referrer in session 
-    (to redirect back to on error) Refreshes token for logged in user if action == 'refresh'.
-    Revokes the token for logged in user if action == 'revoke'. Logs out already logged-in users if action == 'logout'.
-    Handles initial redirect off to Google to being OAuth 2.0 flow handles redirect back from Google & retreiving 
-    OAuth token Stores user info & OAuth token in `session['user']`
+    Stores `next` GET param in session (to persist around OAuth redirects) stores referrer in session (to redirect back 
+    to on error) Refreshes token for logged in user if action == 'refresh'. Revokes the token for logged in user if 
+    action == 'revoke'. Logs out already logged-in users if action == 'logout'. Handles initial redirect off to 
+    Google to being OAuth 2.0 flow handles redirect back from Google & retreiving OAuth token Stores user info & 
+    OAuth token in `session['user']`
     """
 
     # Store some useful destinations in session
@@ -146,6 +146,7 @@ def auth(action):
     user['token'] = token
     session['user'] = user
     flash('Logged in', 'success')
+
     return redirect(session['next'])
 
 
@@ -237,7 +238,7 @@ def go(go):
 
 
 @app.route('/login')
-def index():
+def login():
     """Simple view to display info returned from Google (or a link to login)."""
     return render_template("login.html",user=session.get('user'))
 
