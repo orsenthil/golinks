@@ -86,7 +86,6 @@ def auth(action):
     # User logged in, refresh
     if session.get('user') and action == 'refresh':
         if 'refresh_token' not in session['user']['token']:
-            flash('Could not refresh, token not present', 'danger')
             return redirect(session['last'])
 
         google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['user']['token'])
@@ -95,7 +94,6 @@ def auth(action):
                 client_id=app.config['GOOGLE_CLIENT_ID'],
                 client_secret=app.config['GOOGLE_CLIENT_SECRET'])
 
-        flash('Token refreshed', 'success')
         return redirect(session['next'])
 
     if session.get('user'):
@@ -104,13 +102,10 @@ def auth(action):
                                     params={'token': session['user']['token']['access_token']})
 
             if response.status_code == 200:
-                flash('Authorization revoked', 'warning')
-            else:
-                flash('Could not revoke token: {}'.format(response.content), 'danger')
+                pass
 
         if action in ['logout', 'revoke']:
             del session['user']
-            flash('Logged out', 'success')
 
         return redirect(session['last'])
 
@@ -130,9 +125,6 @@ def auth(action):
     # Error returned from Google
     if request.args.get('error'):
         error = request.args['error']
-        if error == 'access_denied':
-            error = 'Not logged in'
-        flash('Error: {}'.format(error), 'danger')
         return redirect(session['last'])
 
     # Redirect from google with OAuth2 state
@@ -145,8 +137,6 @@ def auth(action):
 
     user['token'] = token
     session['user'] = user
-    flash('Logged in', 'success')
-
     return redirect(session['next'])
 
 
