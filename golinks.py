@@ -203,6 +203,9 @@ def goauthenticate():
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
+    if not session.get('user'):
+        return render_template("authenticate.html")
+
     form = GoLinkEditForm()
     golink = LinksTable.query.get(id)
     if form.validate_on_submit():
@@ -215,6 +218,13 @@ def edit(id):
         return redirect("/")
 
     return render_template("edit.html", form=form, go=golink.name)
+
+
+@app.route('/logout', methods=["GET"])
+def gologout():
+    if session.get("user"):
+        del session['user']
+    return redirect("/")
 
 
 @app.route('/<go>')
