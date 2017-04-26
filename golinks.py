@@ -196,6 +196,11 @@ def index():
     return render_template("index.html", link_details=link_details)
 
 
+@app.route('/goauthenticate', methods=["GET"])
+def goauthenticate():
+    return render_template("authenticate.html")
+
+
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
     form = GoLinkEditForm()
