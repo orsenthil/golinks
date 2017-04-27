@@ -171,8 +171,6 @@ def new():
     if not session.get('user'):
         return render_template("authenticate.html")
 
-    go = None
-    url = None
     form = GoLinkForm()
     session.pop('_flashes', None)
 
@@ -191,7 +189,7 @@ def new():
         form.url.data = ''
         return redirect("/")
 
-    return render_template("new.html", form=form, go=go, url=url)
+    return render_template("new.html", form=form)
 
 
 @app.route('/', methods=["GET"])
@@ -212,6 +210,7 @@ def edit(id):
 
     form = GoLinkEditForm()
     golink = LinksTable.query.get(id)
+
     if form.validate_on_submit():
         url = form.url.data
         golink.url = url
@@ -221,7 +220,7 @@ def edit(id):
         form.url.data = ""
         return redirect("/")
 
-    return render_template("edit.html", form=form, go=golink.name)
+    return render_template("edit.html", form=form)
 
 
 @app.route('/logout', methods=["GET"])
