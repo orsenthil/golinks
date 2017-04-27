@@ -168,6 +168,9 @@ def new():
     """
     Admin interface to create a new go-link.
     """
+    if not session.get('user'):
+        return render_template("authenticate.html")
+
     go = None
     url = None
     form = GoLinkForm()
@@ -196,8 +199,8 @@ def index():
     return render_template("index.html", link_details=link_details)
 
 
-@app.route('/goauthenticate', methods=["GET"])
-def goauthenticate():
+@app.route('/authenticate', methods=["GET"])
+def authenticate():
     return render_template("authenticate.html")
 
 
@@ -221,7 +224,7 @@ def edit(id):
 
 
 @app.route('/logout', methods=["GET"])
-def gologout():
+def logout():
     if session.get("user"):
         del session['user']
     return redirect("/")
