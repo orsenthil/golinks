@@ -189,6 +189,7 @@ def new():
 
         form.go.data = ''
         form.url.data = ''
+        return redirect("/")
 
     return render_template("new.html", form=form, go=go, url=url)
 
@@ -248,7 +249,7 @@ def go(go):
 @app.route('/login')
 def login():
     """Simple view to display info returned from Google (or a link to login)."""
-    return render_template("login.html",user=session.get('user'))
+    return render_template("login.html", user=session.get('user'))
 
 if __name__ == '__main__':
     manager.run()
