@@ -177,9 +177,11 @@ def new():
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
+
         user = session.get('user')
         username = user.name
         userid = user.id
+
         go_link_exists = LinksTable.query.filter_by(name=go).first()
 
         if go_link_exists is None:
@@ -199,11 +201,6 @@ def new():
 def index():
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
     return render_template("index.html", link_details=link_details)
-
-
-@app.route('/authenticate', methods=["GET"])
-def authenticate():
-    return render_template("authenticate.html")
 
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
