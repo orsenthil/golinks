@@ -177,10 +177,13 @@ def new():
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
+        user = session.get('user')
+        username = user.name
+        userid = user.id
         go_link_exists = LinksTable.query.filter_by(name=go).first()
 
         if go_link_exists is None:
-            link = LinksTable(name=go, url=url, hits=0, created_at=datetime.utcnow())
+            link = LinksTable(name=go, url=url, hits=0, username=username, userid=userid, created_at=datetime.utcnow())
             db.session.add(link)
         else:
             flash("http://go/{go} link already exists. Please choose a different name.".format(go=go))
