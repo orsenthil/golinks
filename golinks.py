@@ -69,7 +69,7 @@ def auth(action):
     """All-purpose authentication view.
     
     Stores `next` GET param in session (to persist around OAuth redirects) stores referrer in session (to redirect back 
-    to on error) Refreshes token for logged in user if action == 'refresh'. Revokes the token for logged in user if 
+    to on error) Revokes the token for logged in user if 
     action == 'revoke'. Logs out already logged-in users if action == 'logout'. Handles initial redirect off to 
     Google to being OAuth 2.0 flow handles redirect back from Google & retreiving OAuth token Stores user info & 
     OAuth token in `session['user']`
@@ -78,23 +78,11 @@ def auth(action):
     # Store some useful destinations in session
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
+
         if 'next' in request.args:
             session['next'] = url_for(request.args['next'])
         else:
             session['next'] = session['last']
-
-    # User logged in, refresh
-    if session.get('user') and action == 'refresh':
-        if 'refresh_token' not in session['user']['token']:
-            return redirect(session['last'])
-
-        google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['user']['token'])
-        session['user']['token'] = google.refresh_token(
-                'https://accounts.google.com/o/oauth2/token',
-                client_id=app.config['GOOGLE_CLIENT_ID'],
-                client_secret=app.config['GOOGLE_CLIENT_SECRET'])
-
-        return redirect(session['next'])
 
     if session.get('user'):
         if action == 'revoke':
