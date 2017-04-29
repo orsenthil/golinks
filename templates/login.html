@@ -39,12 +39,7 @@
                     </dl>
                 </div>
                 <div class="card-footer text-xs-center">
-                    <a
-                            href="{{ url_for('auth', action='logout') }}"
-                            class="btn btn-primary">Logout</a>
-                    <a
-                            href="{{ url_for('auth', action='revoke') }}"
-                            class="btn btn-danger">Revoke</a>
+                    <a href="{{ url_for('auth', action='logout') }}" class="btn btn-primary">Logout</a>
                 </div>
                 {% else %}
                     <a href="{{ url_for('auth') }}" class="btn btn-primary">Login</a>

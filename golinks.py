@@ -84,19 +84,6 @@ def auth(action):
         else:
             session['next'] = session['last']
 
-    if session.get('user'):
-        if action == 'revoke':
-            response = requests.get('https://accounts.google.com/o/oauth2/revoke',
-                                    params={'token': session['user']['token']['access_token']})
-
-            if response.status_code == 200:
-                pass
-
-        if action in ['logout', 'revoke']:
-            del session['user']
-
-        return redirect(session['last'])
-
     google = OAuth2Session(
             app.config['GOOGLE_CLIENT_ID'],
             scope=['https://www.googleapis.com/auth/userinfo.email',
