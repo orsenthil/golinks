@@ -4,20 +4,16 @@
 import os
 from datetime import datetime
 
+from flask import (Flask, flash, redirect, render_template, request, session,
+                   url_for)
+from flask_bootstrap import Bootstrap
+from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-
+from requests_oauthlib import OAuth2Session
+from sqlalchemy.dialects.mysql import BIGINT, DATETIME, INTEGER, VARCHAR
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-
-from sqlalchemy.dialects.mysql import BIGINT, INTEGER, VARCHAR, DATETIME
-from flask import Flask, flash, redirect, request, session, url_for, render_template
-
-import requests
-from requests_oauthlib import OAuth2Session
-
-from flask_script import Manager
-from flask_bootstrap import Bootstrap
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
