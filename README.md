@@ -8,3 +8,10 @@ Similar Software
 
 * https://github.com/maccman/go
 * https://github.com/kellegous/go
+
+TODO
+----
+
+1) Dockerfile and run in docker.
+
+
