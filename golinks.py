@@ -62,15 +62,6 @@ class LinksTable(db.Model):
 @app.route('/auth', defaults={'action': 'login'})
 @app.route('/auth/<action>')
 def auth(action):
-    """All-purpose authentication view.
-    
-    Stores `next` GET param in session (to persist around OAuth redirects) stores referrer in session (to redirect back 
-    to on error) Revokes the token for logged in user if 
-    action == 'revoke'. Logs out already logged-in users if action == 'logout'. Handles initial redirect off to 
-    Google to being OAuth 2.0 flow handles redirect back from Google & retreiving OAuth token Stores user info & 
-    OAuth token in `session['user']`
-    """
-
     # Store some useful destinations in session
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
