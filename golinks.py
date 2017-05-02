@@ -131,15 +131,16 @@ def new():
         return render_template("authenticate.html")
 
     form = GoLinkForm()
-    session.pop('_flashes', None)
 
     if form.validate_on_submit():
         go = form.go.data
         url = form.url.data
 
+        session.pop('_flashes', None)
+
         user = session.get('user')
-        username = user.name
-        userid = user.id
+        username = user.get('name', 'noname')
+        userid = user.get('id', 101)
 
         go_link_exists = LinksTable.query.filter_by(name=go).first()
 
