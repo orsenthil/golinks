@@ -127,9 +127,6 @@ class GoLinkEditForm(FlaskForm):
 
 @app.route('/new', methods=["GET", "POST"])
 def new():
-    """
-    Admin interface to create a new go-link.
-    """
     if not session.get('user'):
         return render_template("authenticate.html")
 
