@@ -160,7 +160,7 @@ def new():
 @app.route('/', methods=["GET"])
 def index():
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
-    return render_template("index.html", link_details=link_details)
+    return render_template("index.html", link_details=link_details, user=session.get('user'))
 
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
@@ -180,7 +180,7 @@ def edit(id):
         form.url.data = ""
         return redirect("/")
 
-    return render_template("edit.html", form=form)
+    return render_template("edit.html", form=form, user=session.get('user'))
 
 
 @app.route('/logout', methods=["GET"])
