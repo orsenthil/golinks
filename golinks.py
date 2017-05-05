@@ -18,30 +18,23 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'hard to guess string'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root@localhost/golinks"
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-
 
 app.config.update({
   'DEBUG': bool(os.environ.get('DEBUG')),
   'SECRET_KEY': os.environ.get('SECRET_KEY', 'CHANGEME'),
   'GOOGLE_CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
   'GOOGLE_CLIENT_SECRET': os.environ.get('GOOGLE_CLIENT_SECRET'),
+  'SQLALCHEMY_DATABASE_URI': os.environ.get('MYSQL_DB', 'mysql://root@localhost/golinks'),
+  'SQLALCHEMY_COMMIT_ON_TEARDOWN': True,
+  'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
 
 
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
-if not app.config['GOOGLE_CLIENT_ID'] or not app.config['GOOGLE_CLIENT_SECRET']:
-    raise RuntimeError('Environment not set up.')
 
 
 class LinksTable(db.Model):
