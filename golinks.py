@@ -4,8 +4,7 @@
 import os
 from datetime import datetime
 
-from flask import (Flask, flash, redirect, render_template, request, session,
-                   url_for)
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
@@ -62,7 +61,6 @@ class LinksTable(db.Model):
 @app.route('/auth', defaults={'action': 'login'})
 @app.route('/auth/<action>')
 def auth(action):
-    # Store some useful destinations in session
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
 
