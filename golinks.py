@@ -166,12 +166,6 @@ def new():
     return render_template("new.html", form=form)
 
 
-@app.route('/', methods=["GET"])
-def index():
-    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
-    return render_template("index.html", link_details=link_details, user=session.get('user'))
-
-
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
     if not session.get('user'):
@@ -205,6 +199,12 @@ def go(go):
     redirect_response.headers.add('Pragma', 'no-cache')
 
     return redirect_response
+
+
+@app.route('/', methods=["GET"])
+def index():
+    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
+    return render_template("index.html", link_details=link_details, user=session.get('user'))
 
 
 if __name__ == '__main__':
