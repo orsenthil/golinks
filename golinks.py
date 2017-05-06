@@ -23,19 +23,20 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
 app.config.update({
-  'DEBUG': bool(os.environ.get('DEBUG')),
-  'SECRET_KEY': os.environ.get('SECRET_KEY', 'CHANGEME'),
-  'GOOGLE_CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
-  'GOOGLE_CLIENT_SECRET': os.environ.get('GOOGLE_CLIENT_SECRET'),
-  'SQLALCHEMY_DATABASE_URI': os.environ.get('MYSQL_DB', 'mysql://root@localhost/golinks'),
-  'SQLALCHEMY_COMMIT_ON_TEARDOWN': True,
-  'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+    'DEBUG'                         : bool(os.environ.get('DEBUG')),
+    'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGEME'),
+    'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID'),
+    'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET'),
+    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', 'mysql://root@localhost/golinks'),
+    'SQLALCHEMY_COMMIT_ON_TEARDOWN' : True,
+    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
-
 
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+
+# Model
 
 class LinksTable(db.Model):
     __tablename__ = 'LinksTable'
@@ -51,6 +52,46 @@ class LinksTable(db.Model):
         return '<LinksTable http://go/%r (%r) >' % (self.name, self.url)
 
 
+# Views
+
+class GoLinkForm(FlaskForm):
+    go = StringField("go/", validators=[DataRequired()])
+    url = StringField("redirect to", validators=[DataRequired()])
+    submit = SubmitField("Create")
+
+
+class GoLinkEditForm(FlaskForm):
+    go = StringField("go/", validators=[DataRequired()])
+    url = StringField("new url", validators=[DataRequired()])
+    update = SubmitField("Update")
+    cancel = SubmitField("Cancel")
+
+
+# Controllers
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+
+@app.route('/logout', methods=["GET"])
+def logout():
+    if session.get("user"):
+        del session['user']
+    return redirect("/")
+
+
+@app.route('/login', methods=["GET"])
+def login():
+    """Simple view to display info returned from Google (or a link to login)."""
+    return render_template("login.html", user=session.get('user'))
+
+
 @app.route('/auth', defaults={'action': 'login'})
 @app.route('/auth/<action>')
 def auth(action):
@@ -63,11 +104,11 @@ def auth(action):
             session['next'] = session['last']
 
     google = OAuth2Session(
-            app.config['GOOGLE_CLIENT_ID'],
-            scope=['https://www.googleapis.com/auth/userinfo.email',
-                   'https://www.googleapis.com/auth/userinfo.profile'],
-            redirect_uri=url_for('auth', _external=True),
-            state=session.get('state'))
+        app.config['GOOGLE_CLIENT_ID'],
+        scope=['https://www.googleapis.com/auth/userinfo.email',
+               'https://www.googleapis.com/auth/userinfo.profile'],
+        redirect_uri=url_for('auth', _external=True),
+        state=session.get('state'))
 
     # Initial client request, no `state` from OAuth redirect
     if not request.args.get('state'):
@@ -82,38 +123,15 @@ def auth(action):
 
     # Redirect from google with OAuth2 state
     token = google.fetch_token(
-            'https://accounts.google.com/o/oauth2/token',
-            client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-            authorization_response=request.url)
+        'https://accounts.google.com/o/oauth2/token',
+        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+        authorization_response=request.url)
 
     user = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
 
     user['token'] = token
     session['user'] = user
     return redirect(session['next'])
-
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
-
-@app.errorhandler(500)
-def internal_server_error(e):
-    return render_template('500.html'), 500
-
-
-class GoLinkForm(FlaskForm):
-    go = StringField("go/", validators=[DataRequired()])
-    url = StringField("redirect to", validators=[DataRequired()])
-    submit = SubmitField("Create")
-
-
-class GoLinkEditForm(FlaskForm):
-    go = StringField("go/", validators=[DataRequired()])
-    url = StringField("new url", validators=[DataRequired()])
-    update = SubmitField("Update")
-    cancel = SubmitField("Cancel")
 
 
 @app.route('/new', methods=["GET", "POST"])
@@ -174,13 +192,6 @@ def edit(id):
     return render_template("edit.html", form=form, user=session.get('user'))
 
 
-@app.route('/logout', methods=["GET"])
-def logout():
-    if session.get("user"):
-        del session['user']
-    return redirect("/")
-
-
 @app.route('/<go>')
 def go(go):
     go_link = LinksTable.query.filter_by(name=go).first()
@@ -195,11 +206,6 @@ def go(go):
 
     return redirect_response
 
-
-@app.route('/login')
-def login():
-    """Simple view to display info returned from Google (or a link to login)."""
-    return render_template("login.html", user=session.get('user'))
 
 if __name__ == '__main__':
     manager.run()
