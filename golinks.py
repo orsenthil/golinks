@@ -39,7 +39,9 @@ if app.debug:
 # Model
 
 class LinksTable(db.Model):
+
     __tablename__ = 'LinksTable'
+
     id = db.Column(INTEGER, primary_key=True)
     name = db.Column(VARCHAR(45), unique=True)
     url = db.Column(VARCHAR(45))
