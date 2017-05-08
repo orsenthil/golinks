@@ -145,6 +145,13 @@ def new():
         go = form.go.data
         url = form.url.data
 
+        number_s_in_go = go.count("%s")
+        number_s_in_url = url.count("%s")
+
+        if number_s_in_go != number_s_in_url:
+            flash("Please check your variable substitution.")
+            return redirect("/new")
+
         session.pop('_flashes', None)
 
         user = session.get('user')
