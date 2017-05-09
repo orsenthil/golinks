@@ -103,23 +103,23 @@ def redirect(go):
     return redirect_response
 
 
-
 @app.route('/auth', defaults={'action': 'login'})
-def auth():
+def authenticate():
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
 
+        # Note what the values this can take.
         if 'next' in request.args:
             session['next'] = url_for(request.args['next'])
         else:
             session['next'] = session['last']
 
     google = OAuth2Session(
-        app.config['GOOGLE_CLIENT_ID'],
-        scope=['https://www.googleapis.com/auth/userinfo.email',
-               'https://www.googleapis.com/auth/userinfo.profile'],
-        redirect_uri=url_for('auth', _external=True),
-        state=session.get('state'))
+            app.config['GOOGLE_CLIENT_ID'],
+            scope=['https://www.googleapis.com/auth/userinfo.email',
+                   'https://www.googleapis.com/auth/userinfo.profile'],
+            redirect_uri=url_for('authenticate', _external=True),
+            state=session.get('state'))
 
     # Initial client request, no `state` from OAuth redirect
     if not request.args.get('state'):
@@ -142,6 +142,7 @@ def auth():
 
     user['token'] = token
     session['user'] = user
+
     return redirect(session['next'])
 
 
