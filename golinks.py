@@ -103,7 +103,7 @@ def redirect(go):
     return redirect_response
 
 
-@app.route('/auth', defaults={'action': 'login'})
+@app.route('/auth')
 def authenticate():
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
