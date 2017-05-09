@@ -81,6 +81,27 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
+@app.route('/', methods=["GET"])
+def index():
+    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
+    return render_template("index.html", link_details=link_details, user=session.get('user'))
+
+
+@app.route('/<go>')
+def go(go):
+    go_link = LinksTable.query.filter_by(name=go).first()
+    if go_link is None:
+        return redirect("/")
+
+    redirect_response = redirect(go_link.url, code=302)
+
+    redirect_response.headers.add('Last-Modified', datetime.now())
+    redirect_response.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+    redirect_response.headers.add('Pragma', 'no-cache')
+
+    return redirect_response
+
+
 @app.route('/logout', methods=["GET"])
 def logout():
     if session.get("user"):
@@ -186,28 +207,6 @@ def edit(id):
         return redirect("/")
 
     return render_template("edit.html", form=form, user=session.get('user'))
-
-
-@app.route('/<go>')
-def go(go):
-    go_link = LinksTable.query.filter_by(name=go).first()
-    if go_link is None:
-        return redirect("/")
-
-    redirect_response = redirect(go_link.url, code=302)
-
-    redirect_response.headers.add('Last-Modified', datetime.now())
-    redirect_response.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
-    redirect_response.headers.add('Pragma', 'no-cache')
-
-    return redirect_response
-
-
-@app.route('/', methods=["GET"])
-def index():
-    link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
-    return render_template("index.html", link_details=link_details, user=session.get('user'))
-
 
 if __name__ == '__main__':
     manager.run()
