@@ -88,7 +88,7 @@ def index():
 
 
 @app.route('/<go>')
-def redirect(go):
+def goto(go):
     go_link = LinksTable.query.filter_by(name=go).first()
 
     if go_link is None:
