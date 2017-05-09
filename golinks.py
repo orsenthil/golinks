@@ -109,6 +109,7 @@ def authenticate():
         session['last'] = request.referrer or url_for('index')
 
         # Note what the values this can take.
+        # TODO: skumaran - who is populating next.
         if 'next' in request.args:
             session['next'] = url_for(request.args['next'])
         else:
@@ -134,9 +135,9 @@ def authenticate():
 
     # Redirect from google with OAuth2 state
     token = google.fetch_token(
-        'https://accounts.google.com/o/oauth2/token',
-        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-        authorization_response=request.url)
+            'https://accounts.google.com/o/oauth2/token',
+            client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+            authorization_response=request.url)
 
     user = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
 
