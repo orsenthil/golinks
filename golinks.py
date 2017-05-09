@@ -88,12 +88,6 @@ def logout():
     return redirect("/")
 
 
-@app.route('/login', methods=["GET"])
-def login():
-    """Simple view to display info returned from Google (or a link to login)."""
-    return render_template("login.html", user=session.get('user'))
-
-
 @app.route('/auth', defaults={'action': 'login'})
 def auth():
     if not request.args.get('state'):
