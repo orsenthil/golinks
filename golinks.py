@@ -88,8 +88,9 @@ def index():
 
 
 @app.route('/<go>')
-def go(go):
+def redirect(go):
     go_link = LinksTable.query.filter_by(name=go).first()
+
     if go_link is None:
         return redirect("/")
 
@@ -101,12 +102,6 @@ def go(go):
 
     return redirect_response
 
-
-@app.route('/logout', methods=["GET"])
-def logout():
-    if session.get("user"):
-        del session['user']
-    return redirect("/")
 
 
 @app.route('/auth', defaults={'action': 'login'})
@@ -207,6 +202,14 @@ def edit(id):
         return redirect("/")
 
     return render_template("edit.html", form=form, user=session.get('user'))
+
+
+@app.route('/logout', methods=["GET"])
+def logout():
+    if session.get("user"):
+        del session['user']
+    return redirect("/")
+
 
 if __name__ == '__main__':
     manager.run()
