@@ -1,0 +1,48 @@
+{
+  "id": "golinks",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "mesosphere/skumaran-golinks:latest",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 5000,
+          "containerPort": 5000,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  },
+  "env": {
+    "GH_AUTH_TOKEN": {
+      "secret": "secret1"
+    }
+  },
+  "secrets": {
+    "secret1": {
+      "source": "mesosphere_mergebot_access_token"
+    }
+  },
+  "labels": {
+    "CREATED_BY": "skumaran@mesosphere.io",
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_VHOST": "go.mesosphere.com"
+  },
+  "uris": [
+    "file:///etc/docker/docker.tar.gz"
+  ],
+  "acceptedResourceRoles": ["slave_public"],
+  "instances": 1,
+  "cpus": 1,
+  "mem": 64,
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/"
+    },
+    {
+      "protocol": "COMMAND",
+      "command" : { "value": "curl -S --fail http://localhost:5000" }
+    }
+  ]
+}
