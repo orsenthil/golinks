@@ -6,7 +6,7 @@ from datetime import datetime
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
-from flask_script import Manager
+from flask_script import Manager, Server
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from requests_oauthlib import OAuth2Session
@@ -17,10 +17,6 @@ from wtforms.validators import DataRequired
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
-
-manager = Manager(app)
-bootstrap = Bootstrap(app)
-db = SQLAlchemy(app)
 
 app.config.update({
     'DEBUG'                         : bool(os.environ.get('DEBUG')),
@@ -35,6 +31,10 @@ app.config.update({
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+manager = Manager(app)
+manager.add_command("runserver", Server(host="0.0.0.0", port=5000))
+bootstrap = Bootstrap(app)
+db = SQLAlchemy(app)
 
 # Model
 
@@ -211,6 +211,11 @@ def logout():
     if session.get("user"):
         del session['user']
     return redirect("/")
+
+
+@app.route('/test', methods=["GET"])
+def test():
+    return "hello, world"
 
 
 if __name__ == '__main__':
