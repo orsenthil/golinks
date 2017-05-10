@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{%  block page_content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>
+                    <p class="text-left">
+                        The following environment variable needs to be set.
+                    </p>
+                    <p>
+                        'GOOGLE_CLIENT_ID'
+                    </p>
+                    <p>
+                        'GOOGLE_CLIENT_SECRET'
+                    </p>
+                    <p>
+                        'MYSQL_DB'
+                    </p>
+                </h4>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

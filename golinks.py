@@ -21,9 +21,9 @@ app = Flask(__name__)
 app.config.update({
     'DEBUG'                         : bool(os.environ.get('DEBUG')),
     'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGEME'),
-    'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID'),
-    'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET'),
-    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', 'mysql://root@localhost/golinks'),
+    'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID', None),
+    'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET', None),
+    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', None),
     'SQLALCHEMY_COMMIT_ON_TEARDOWN' : True,
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
@@ -81,8 +81,22 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
+def check_environment():
+    if os.environ.get('MYSQL_DB', None):
+        return False
+    if os.environ.get('GOOGLE_CLIENT_ID', None):
+        return False
+    if os.environ.get('GOOGLE_CLIENT_SECRET', None):
+        return False
+    return True
+
+
 @app.route('/', methods=["GET"])
 def index():
+    environment_ok = check_environment()
+    if not environment_ok:
+        return render_template('environment.html')
+
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
     return render_template("index.html", link_details=link_details, user=session.get('user'))
 
