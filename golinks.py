@@ -38,6 +38,7 @@ db = SQLAlchemy(app)
 
 # Model
 
+
 class LinksTable(db.Model):
 
     __tablename__ = 'LinksTable'
@@ -163,7 +164,7 @@ def authenticate():
 
 @app.route('/new', methods=["GET", "POST"])
 def new():
-    if not session.get('user'):
+    if not (app.debug or session.get('user')):
         return render_template("authenticate.html")
 
     form = GoLinkForm()
@@ -181,7 +182,7 @@ def new():
 
         session.pop('_flashes', None)
 
-        user = session.get('user')
+        user = session.get('user', 'default-user')
         username = user.get('name', 'noname')
         userid = user.get('id', 101)
 
@@ -202,7 +203,7 @@ def new():
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
-    if not session.get('user'):
+    if not (app.debug or session.get('user')):
         return render_template("authenticate.html")
 
     form = GoLinkEditForm()
