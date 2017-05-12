@@ -3,7 +3,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "mesosphere/skumaran-golinks:latest",
+      "image": "skumaran/golinks:latest",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 5000,
@@ -28,9 +28,6 @@
     "HAPROXY_GROUP": "external",
     "HAPROXY_0_VHOST": "go.mesosphere.com"
   },
-  "uris": [
-    "file:///etc/docker/docker.tar.gz"
-  ],
   "acceptedResourceRoles": ["*"],
   "instances": 1,
   "cpus": 0.5,
