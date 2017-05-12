@@ -25,11 +25,7 @@
   "healthChecks": [
     {
       "protocol": "HTTP",
-      "path": "/"
-    },
-    {
-      "protocol": "COMMAND",
-      "command" : { "value": "curl -S --fail http://0.0.0.0:5000/test" }
+      "path": "/test"
     }
   ]
 }
