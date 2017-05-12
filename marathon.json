@@ -13,16 +13,6 @@
       ]
     }
   },
-  "env": {
-    "GH_AUTH_TOKEN": {
-      "secret": "secret1"
-    }
-  },
-  "secrets": {
-    "secret1": {
-      "source": "mesosphere_mergebot_access_token"
-    }
-  },
   "labels": {
     "CREATED_BY": "skumaran@mesosphere.io",
     "HAPROXY_GROUP": "external",
