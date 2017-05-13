@@ -82,22 +82,8 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
-def check_environment():
-    if os.environ.get('MYSQL_DB', None):
-        return False
-    if os.environ.get('GOOGLE_CLIENT_ID', None):
-        return False
-    if os.environ.get('GOOGLE_CLIENT_SECRET', None):
-        return False
-    return True
-
-
 @app.route('/', methods=["GET"])
 def index():
-    environment_ok = check_environment()
-    if not environment_ok:
-        return render_template('environment.html')
-
     link_details = LinksTable.query.with_entities(LinksTable.id, LinksTable.name, LinksTable.url).all()
     return render_template("index.html", link_details=link_details, user=session.get('user'))
 
