@@ -31,10 +31,11 @@ app.config.update({
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-manager = Manager(app)
-manager.add_command("runserver", Server(host="0.0.0.0", port=5000))
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
+
+manager = Manager(app)
+manager.add_command("runserver", Server(host="0.0.0.0", port=5000))
 
 # Model
 
@@ -109,7 +110,6 @@ def authenticate():
     if not request.args.get('state'):
         session['last'] = request.referrer or url_for('index')
 
-        # Note what the values this can take.
         # TODO: skumaran - who is populating next.
         if 'next' in request.args:
             session['next'] = url_for(request.args['next'])
