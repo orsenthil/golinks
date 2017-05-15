@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import random
+import string
 
 import os
 from datetime import datetime
@@ -15,6 +17,19 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+
+def _get_random_password():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
+
+
+def get_local_admin_userpass():
+    if os.environ.get("LOCAL_ADMIN_USERPASS", None) is not None:
+        if ":" in os.environ.get("LOCAL_ADMIN_USERPASS"):
+            local_admin, local_admin_password = os.environ.get("LOCAL_ADMIN_USERPASS").split(":")
+            return local_admin, local_admin_password
+    return 'admin', _get_random_password()
+
 
 app = Flask(__name__)
 
