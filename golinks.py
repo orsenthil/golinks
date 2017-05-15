@@ -31,11 +31,15 @@ def get_local_admin_userpass():
     return 'admin', _get_random_password()
 
 
+def get_google_oauth_settings():
+    return os.environ.get('GOOGLE_CLIENT_ID', None), os.environ.get('GOOGLE_CLIENT_SECRET', None)
+
+
 app = Flask(__name__)
 
 app.config.update({
-    'DEBUG'                         : bool(os.environ.get('DEBUG')),
-    'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGEME'),
+    'DEBUG'                         : bool(os.environ.get('DEBUG', False)),
+    'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGE-ME'),
     'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID', None),
     'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET', None),
     'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', None),
