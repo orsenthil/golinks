@@ -18,6 +18,8 @@ from wtforms.validators import DataRequired
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+app = Flask(__name__)
+
 has_local_admin = False
 
 
@@ -33,36 +35,48 @@ def _get_random_password():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
 
 
+def get_default_local_user_password():
+    return 'admin', _get_random_password()
+
+
 def get_local_admin_userpass():
     if os.environ.get("LOCAL_ADMIN_USERPASS", None) is not None:
         if ":" in os.environ.get("LOCAL_ADMIN_USERPASS"):
             local_admin, local_admin_password = os.environ.get("LOCAL_ADMIN_USERPASS").split(":")
             return local_admin, local_admin_password
-    return 'admin', _get_random_password()
+    return get_default_local_user_password()
 
 
 if local_admin_in_env():
+    global has_local_admin
     has_local_admin = True
     local_user, local_password = get_local_admin_userpass()
 
 
-def get_google_oauth_settings():
-    return os.environ.get('GOOGLE_CLIENT_ID', None), os.environ.get('GOOGLE_CLIENT_SECRET', None)
+if not local_admin_in_env() and google_oauth_in_env():
+    app.config.update({
+            'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID'),
+            'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET')})
 
-app = Flask(__name__)
+
+if not local_admin_in_env() and not google_oauth_in_env():
+    global has_local_admin
+    has_local_admin = True
+    local_user, local_password = get_default_local_user_password()
+
 
 app.config.update({
     'DEBUG'                         : bool(os.environ.get('DEBUG', False)),
     'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGE-ME'),
-    'GOOGLE_CLIENT_ID'              : os.environ.get('GOOGLE_CLIENT_ID', None),
-    'GOOGLE_CLIENT_SECRET'          : os.environ.get('GOOGLE_CLIENT_SECRET', None),
     'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', None),
     'SQLALCHEMY_COMMIT_ON_TEARDOWN' : True,
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
 
+
 if app.debug:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
