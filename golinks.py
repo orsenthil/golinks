@@ -18,6 +18,16 @@ from wtforms.validators import DataRequired
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+has_local_admin = False
+
+
+def google_oauth_in_env():
+    return 'GOOGLE_CLIENT_ID' in os.environ and 'GOOGLE_CLIENT_SECRET' in os.environ
+
+
+def local_admin_in_env():
+    return 'LOCAL_ADMIN_USERPASS' in os.environ
+
 
 def _get_random_password():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
@@ -31,9 +41,13 @@ def get_local_admin_userpass():
     return 'admin', _get_random_password()
 
 
+if local_admin_in_env():
+    has_local_admin = True
+    local_user, local_password = get_local_admin_userpass()
+
+
 def get_google_oauth_settings():
     return os.environ.get('GOOGLE_CLIENT_ID', None), os.environ.get('GOOGLE_CLIENT_SECRET', None)
-
 
 app = Flask(__name__)
 
