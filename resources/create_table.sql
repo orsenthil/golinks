@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `LinksTable` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL,
   `username` VARCHAR(45) NULL,
   `userid` BIGINT NULL,
   `name` VARCHAR(45) NULL,
@@ -7,5 +7,4 @@ CREATE TABLE IF NOT EXISTS `LinksTable` (
   `hits` BIGINT DEFAULT 0,
   `created_at` DATETIME DEFAULT  CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
-ENGINE = InnoDB
+  UNIQUE (`name` ASC))

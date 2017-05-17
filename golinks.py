@@ -78,7 +78,7 @@ if not local_admin_in_env() and not google_oauth_in_env():
 app.config.update({
     'DEBUG'                         : bool(os.environ.get('DEBUG', False)),
     'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGE-ME'),
-    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', ":memory:"),
+    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', "sqlite:///:memory:"),
     'SQLALCHEMY_COMMIT_ON_TEARDOWN' : True,
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
@@ -226,8 +226,8 @@ def new():
         session.pop('_flashes', None)
 
         user = session.get('user', 'default-user')
-        username = user.get('name', 'noname')
-        userid = user.get('id', 101)
+        username = 'name'# user.get('name')
+        userid = 101 # user.get('id', 101)
 
         go_link_exists = LinksTable.query.filter_by(name=go).first()
 
