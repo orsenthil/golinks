@@ -12,8 +12,10 @@ from flask_bootstrap import Bootstrap
 from flask_script import Manager, Server
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
+
 from requests_oauthlib import OAuth2Session
 from sqlalchemy.dialects.mysql import BIGINT, DATETIME, INTEGER, VARCHAR
+
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
@@ -198,7 +200,7 @@ def authenticate():
 
 @app.route('/new', methods=["GET", "POST"])
 def new():
-    if not (app.debug or session.get('user')):
+    if not has_local_admin and not session.get('user'):
         return render_template("authenticate.html")
 
     form = GoLinkForm()
@@ -237,7 +239,7 @@ def new():
 
 @app.route('/edit/<id>', methods=["GET", "POST"])
 def edit(id):
-    if not (app.debug or session.get('user')):
+    if not has_local_admin and not session.get('user'):
         return render_template("authenticate.html")
 
     form = GoLinkEditForm()
