@@ -30,7 +30,7 @@ rv = sqlite3.connect(':memory:')
 rv.row_factory = sqlite3.Row
 
 
-with app.open_resource('create_table.sql', mode='r') as f:
+with app.open_resource('resources/create_table.sql', mode='r') as f:
     rv.cursor().executescript(f.read())
 rv.commit()
 
@@ -60,7 +60,6 @@ def get_local_admin_userpass():
 
 
 if local_admin_in_env():
-    global has_local_admin
     has_local_admin = True
     local_user, local_password = get_local_admin_userpass()
 
@@ -72,7 +71,6 @@ if not local_admin_in_env() and google_oauth_in_env():
 
 
 if not local_admin_in_env() and not google_oauth_in_env():
-    global has_local_admin
     has_local_admin = True
     local_user, local_password = get_default_local_user_password()
 

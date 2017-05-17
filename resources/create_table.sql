@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `golinks`.`LinksTable` (
+CREATE TABLE IF NOT EXISTS `LinksTable` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NULL,
   `userid` BIGINT NULL,
