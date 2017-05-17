@@ -7,6 +7,7 @@ import string
 import os
 from datetime import datetime
 
+import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
 from flask_script import Manager, Server
@@ -24,6 +25,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
 has_local_admin = False
+
+rv = sqlite3.connect(':memory:')
+rv.row_factory = sqlite3.Row
+
+
+with app.open_resource('create_table.sql', mode='r') as f:
+    rv.cursor().executescript(f.read())
+rv.commit()
 
 
 def google_oauth_in_env():
@@ -71,7 +80,7 @@ if not local_admin_in_env() and not google_oauth_in_env():
 app.config.update({
     'DEBUG'                         : bool(os.environ.get('DEBUG', False)),
     'SECRET_KEY'                    : os.environ.get('SECRET_KEY', 'CHANGE-ME'),
-    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', None),
+    'SQLALCHEMY_DATABASE_URI'       : os.environ.get('MYSQL_DB', ":memory:"),
     'SQLALCHEMY_COMMIT_ON_TEARDOWN' : True,
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
 })
