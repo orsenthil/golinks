@@ -7,7 +7,6 @@ import string
 import os
 from datetime import datetime
 
-import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_bootstrap import Bootstrap
 from flask_script import Manager, Server
