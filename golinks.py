@@ -26,14 +26,6 @@ app = Flask(__name__)
 
 has_local_admin = False
 
-rv = sqlite3.connect(':memory:')
-rv.row_factory = sqlite3.Row
-
-
-with app.open_resource('resources/create_table.sql', mode='r') as f:
-    rv.cursor().executescript(f.read())
-rv.commit()
-
 
 def google_oauth_in_env():
     return 'GOOGLE_CLIENT_ID' in os.environ and 'GOOGLE_CLIENT_SECRET' in os.environ
