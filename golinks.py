@@ -91,6 +91,13 @@ if app.debug:
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
+
+with app.open_resource('resources/create_table.sql', mode='r') as f:
+    db.session.execute(f.read())
+
+db.session.commit()
+
+
 manager = Manager(app)
 manager.add_command("runserver", Server(host="0.0.0.0", port=5000))
 
