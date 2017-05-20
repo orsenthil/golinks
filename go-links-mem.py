@@ -110,49 +110,6 @@ def goto(go):
     return redirect_response
 
 
-@app.route('/auth')
-def authenticate():
-    if not request.args.get('state'):
-        session['last'] = request.referrer or url_for('index')
-
-        # TODO: skumaran - who is populating next.
-        if 'next' in request.args:
-            session['next'] = url_for(request.args['next'])
-        else:
-            session['next'] = session['last']
-
-    google = OAuth2Session(
-        app.config['GOOGLE_CLIENT_ID'],
-        scope=['https://www.googleapis.com/auth/userinfo.email',
-               'https://www.googleapis.com/auth/userinfo.profile'],
-        redirect_uri=url_for('authenticate', _external=True),
-        state=session.get('state'))
-
-    # Initial client request, no `state` from OAuth redirect
-    if not request.args.get('state'):
-        url, state = google.authorization_url('https://accounts.google.com/o/oauth2/auth', access_type='offline')
-        session['state'] = state
-        return redirect(url)
-
-    # Error returned from Google
-    if request.args.get('error'):
-        error = request.args['error']
-        return redirect(session['last'])
-
-    # Redirect from google with OAuth2 state
-    token = google.fetch_token(
-        'https://accounts.google.com/o/oauth2/token',
-        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-        authorization_response=request.url)
-
-    user = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
-
-    user['token'] = token
-    session['user'] = user
-
-    return redirect(session['next'])
-
-
 @app.route('/new', methods=["GET", "POST"])
 def new():
     form = GoLinkForm()
