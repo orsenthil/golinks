@@ -170,10 +170,5 @@ def logout():
     return redirect("/")
 
 
-@app.route('/test', methods=["GET"])
-def test():
-    return "hello, world"
-
-
 if __name__ == '__main__':
     manager.run()
