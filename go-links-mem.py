@@ -29,10 +29,6 @@ app.config.update({
 })
 
 
-if app.debug:
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
-
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
