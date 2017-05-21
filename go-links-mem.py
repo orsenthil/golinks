@@ -10,7 +10,6 @@ from flask_script import Manager, Server
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 
-from requests_oauthlib import OAuth2Session
 from sqlalchemy.dialects.mysql import BIGINT, DATETIME, INTEGER, VARCHAR
 
 from wtforms import StringField, SubmitField
@@ -31,7 +30,6 @@ app.config.update({
 
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
-
 
 with app.open_resource('resources/create_table.sql', mode='r') as f:
     db.session.execute(f.read())
