@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `LinksTable` (
-  `id` INT NOT NULL,
+  `id` INT,
   `username` VARCHAR(45) NULL,
   `userid` BIGINT NULL,
   `name` VARCHAR(45) NULL,
